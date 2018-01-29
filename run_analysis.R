@@ -1,5 +1,9 @@
-download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "dataset.zip")
-unzip("dataset.zip")
+# To be run with the working directory set to the parent directory of the dataset
+#
+# If original dataset is not available
+#
+#download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", "dataset.zip")
+#unzip("dataset.zip")
 
 setwd("UCI HAR Dataset")
 
@@ -24,7 +28,8 @@ names(subjects) <- "subject"
 # Construct the headers for the data set
 # 
 
-# Read the features and convert to lower case.
+# Read the features.
+
 # Reading the file you get the column index in the first
 # column (V1) and the name of the feature in the second (V2)
 #features <- tolower(read.table("features.txt")[,2])
@@ -59,9 +64,15 @@ names(df) <- varnames
 # Save the tidy dataset.
 # Explicitly setting field and decimal separator to handle
 # different locales.
-# Since the headers do not have the syntax for variables, they
-# have to be read with check.names=FALSE, e.g.
-#   read.csv("UCI HAR Dataset averages.txt", sep=";", dec=".", header=TRUE, check.names = FALSE)
+#
+# For the dataset to be truly tidy they have to be converted to
+# lowercase and non-alphanumeric excluding underscore be converted
+# to eg. underscore (_).
+
+names(df) <- tolower(gsub("[_]{2,}", "_", gsub("[-()]", "_", names(df) )))
+
+# Write the file to the original working directory
 setwd("..")
-write.table(df, "UCI HAR Dataset averages.txt",  row.names = FALSE, sep=";", dec=".")
+
+write.table(df, "UCI HAR Dataset averages.txt",  row.names = FALSE, dec=".")
 
